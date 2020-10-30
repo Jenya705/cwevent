@@ -1,0 +1,14 @@
+/DispatchChainCommand.class
+/DispatchCommand.class
+/ExecuteModifiedCommand.class
+/FinishEventCommand.class
+/GiveChestCommand.class
+/IfCommand.class
+/LockPlayerCommand$GM3Runnable.class
+/LockPlayerCommand$LockPlayerEnd.class
+/LockPlayerCommand$LockPlayerRunnable.class
+/LockPlayerCommand$PlayerWithOldLocation.class
+/LockPlayerCommand.class
+/RegisterComponentCommand.class
+/RegisterEventCommand.class
+/SendMessageCommand.class
