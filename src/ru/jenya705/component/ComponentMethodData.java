@@ -18,7 +18,5 @@ public class ComponentMethodData extends ParseData{
 	public void setResult(String result) {
 		this.result = result;
 	}
-	
-	
 
 }

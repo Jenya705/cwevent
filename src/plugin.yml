@@ -1,0 +1,79 @@
+name: Events
+main: ru.jenya705.Loader
+version: 1.0.0
+api-version: 1.16
+author: Jenya705
+commands:
+   sendmsg:
+      permission: cwevents.sendmsg
+      usage: sendmsg <name> <msg>
+   executemod:
+      aliases: [exec]
+      permission: cwevents.executemod
+      usage: executemod <name> <command_to_exec>
+   regcomp:
+      permission: cwevents.regcomp
+      usage: regcomp <event_identifier> <object_name> <comp_name> <comp_args>
+   lockpl:
+      permission: cwevents.lockpl
+      usage: lockpl <time> <position> <gm3> <players>
+   regevent:
+      permission: cwevent.regevent
+      usage: regevent <start_location> <event_identifier> <event_name> <date>
+   dispatch:
+      aliases: [disp]
+      permission: cwevents.dispatch
+      usage: dispatch <command>
+   finishevent:
+      permission: cwevents.finishevent
+      usage: finishevent <event_identififer>
+   dispatchchain:
+      aliases: [dispchain]
+      permission: cwevents.dispatchchain
+      usage: dispatchchain <start_location> <executor>
+   chgive:
+      permission: cwevents.chgive
+      usage: chgive <chest_location> <player>
+   if:
+      permission: cwevents.if
+      usage: if <executor> <...>
+   setvar:
+      permission: cwevents.setvar
+      usage: setvar <var_name> <variable>
+permissions:
+   cwevents.*:
+      default: op
+      children:
+         cwevents.finishevent: true
+         cwevents.executemod: true
+         cwevents.sendmsg: true
+         cwevents.regcomp: true
+         cwevents.lockpl: true
+         cwevents.regevent: true
+         cwevents.dispatch: true
+         cwevents.dispatchchain: true
+         cwevents.chgive: true
+         cwevents.if: true
+         cwevents.setvar: true
+   cwevents.executemod:
+      default: op
+   cwevents.sendmsg:
+      default: op
+   cwevents.regcomp:
+      default: op
+   cwevents.lockpl:
+      default: op
+   cwevents.regevent:
+      default: op
+   cwevents.dispatch:
+      default: op
+   cwevents.finishevent:
+      default: op
+   cwevents.dispatchchain:
+      default: op
+   cwevents.chgive:
+      default: op
+   cwevents.if:
+      default: op
+   cwevents.setvar:
+      default: op

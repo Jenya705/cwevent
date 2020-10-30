@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 
 import ru.jenya705.GameEvent;
 import ru.jenya705.parsing.DataParser.ParseData;
+import ru.jenya705.variable.VariableContainer;
 
 public abstract class Component implements Listener{
 
@@ -26,9 +27,9 @@ public abstract class Component implements Listener{
 	protected static Map<String, Consumer<ComponentMethodData>> createGlobalFunctions() {
 		Map<String, Consumer<ComponentMethodData>> globalFunctions = new HashMap<>();
 		globalFunctions.put("calculate", GlobalComponent::count);
+		globalFunctions.put("var", VariableContainer::getVarComponentFunction);
 		return globalFunctions;
 	}
-	
 	
 	protected static void addComponent(String name, Component component) {
 		components.put(name, component);

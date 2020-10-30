@@ -18,6 +18,7 @@ import ru.jenya705.command.LockPlayerCommand;
 import ru.jenya705.command.RegisterComponentCommand;
 import ru.jenya705.command.RegisterEventCommand;
 import ru.jenya705.command.SendMessageCommand;
+import ru.jenya705.command.SetVarCommand;
 import ru.jenya705.component.TriggerComponent;
 import ru.jenya705.component.TriggerOnceComponent;
 import ru.jenya705.component.TriggerPlayerOnceComponent;
@@ -49,6 +50,7 @@ public class Loader extends JavaPlugin {
 		setCommand("dispatchchain", new DispatchChainCommand());
 		setCommand("chgive", new GiveChestCommand());
 		setCommand("if", new IfCommand());
+		setCommand("setvar", new SetVarCommand());
 		
 		(new TriggerComponent()).registerComponent();
 		(new TriggerOnceComponent()).registerComponent();
