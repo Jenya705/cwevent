@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Util {
 
@@ -20,9 +22,10 @@ public class Util {
 	public static String connectStringsFromArray(String[] arr, String between) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		for (String str : arr) {
-			stringBuilder.append(str + between);
+		for (int i = 0; i < arr.length - 1; ++i) {
+			stringBuilder.append(arr[i] + between);
 		}
+		stringBuilder.append(arr[arr.length-1]);
 		return stringBuilder.toString();
 			
 		
@@ -50,6 +53,17 @@ public class Util {
 			while((i = fileReader.read()) != -1) result += (char) i;
 			return result;
 		}
+		
+	}
+	
+	public static int[] findAll(String string, char toFind) {
+		
+		int[] bufArr = new int[10];
+		int currentLen = 0;
+		for (int i = 0; i < string.length(); ++i) {
+			if (string.charAt(i) == toFind) bufArr[currentLen] = i;
+		}
+		return Arrays.copyOf(bufArr, currentLen);
 		
 	}
 	

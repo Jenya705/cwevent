@@ -1,5 +1,6 @@
 package ru.jenya705.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,30 +89,60 @@ public class MinecraftUtil {
 		return args;
 	}
 	
+	public static String[] universalComponentFunctionSplit(String arg, char between) {
+		List<String> splittedString = new ArrayList<>();
+		int inFunction = 0;
+		int currentStartIndex = -1;
+		String currentString = "";
+		for (int i = 1; i < arg.length() - 1; ++i) {
+			if (arg.charAt(i) == between && inFunction == 0) {
+				splittedString.add(currentString);
+				currentString = "";
+			}
+			else if (arg.charAt(i) == '{') {
+				if (inFunction == 0) currentStartIndex = i;
+				inFunction++;
+			}
+			else if (arg.charAt(i) == '}') {
+				inFunction--;
+				if (inFunction == 0) currentString += executeComponentFunction(arg.substring(currentStartIndex, i+1));
+			}
+			else if (inFunction == 0){
+				currentString += arg.charAt(i);
+			}
+		}
+		splittedString.add(currentString);
+		Object[] array = splittedString.toArray();
+		String[] stringArray = new String[array.length];
+		for (int i = 0; i < array.length; ++i) stringArray[i] = (String) array[i];
+		return stringArray;
+		
+	}
+	
+	public static String executeComponentFunction(String function) {
+		Loader.log(Level.INFO, function);
+		String[] splittedObject = universalComponentFunctionSplit(function, ':');
+		if (splittedObject.length == 3) {
+			Component component = Component.getComponent(splittedObject[0]);
+			ComponentMethodData componentMethodData = new ComponentMethodData(0, splittedObject[2].split(","));
+			component.applyFunction(splittedObject[1], componentMethodData);
+			return componentMethodData.getResult();
+		}
+		else {
+			ComponentMethodData componentMethodData = new ComponentMethodData(0, splittedObject[1].split(","));
+			Component.applyGlobalFunction(splittedObject[0], componentMethodData);
+			return componentMethodData.getResult();
+		}
+	}
+	
 	public static String[] getCommandWithFunctionExecuted(String executorName, String[] args) {
 		
 		for (int i = 0; i < args.length; ++i) {
 			String arg = args[i];
 			if (arg.length() != 0 && arg.charAt(0) == '{' && arg.charAt(arg.length() - 1) == '}') {
-				String componentCommand = arg.substring(1, arg.length() - 1);
-				String[] componentXCommand = componentCommand.split(":");
-				if (componentXCommand.length == 3) {
-					Component component = Component.getComponent(componentXCommand[0]);
-					ComponentMethodData componentMethodData = new ComponentMethodData(0, getCommandWithFunctionExecuted(executorName, componentXCommand[2].split(",")));
-					component.applyFunction(componentXCommand[1], componentMethodData);
-					/**
-					Consumer<ComponentMethodData> componentFunction = component.getFunction(componentXCommand[1]);
-					componentFunction.accept(componentMethodData);
-					*/
-					if (componentMethodData.getResult() == null) Loader.log(Level.SEVERE, "command function executed " + Arrays.toString(args));
-					else args[i] = componentMethodData.getResult();
-				}
-				else {
-					ComponentMethodData componentMethodData = new ComponentMethodData(0, getCommandWithFunctionExecuted(executorName, componentXCommand[1].split(",")));
-					Component.applyGlobalFunction(componentXCommand[0], componentMethodData);
-					if (componentMethodData.getResult() == null) Loader.log(Level.SEVERE, "command function executed " + Arrays.toString(args));
-					else args[i] = componentMethodData.getResult();
-				}
+				String functionExecuteResult = executeComponentFunction(arg);
+				if (functionExecuteResult == null) Loader.log(Level.SEVERE, "command with function executed " + arg);
+				else args[i] = functionExecuteResult;
 			}
 		}
 		

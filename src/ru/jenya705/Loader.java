@@ -38,6 +38,8 @@ public class Loader extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
+		createPluginFolder();
+		
 		GameEvent.loadEvents();
 		
 		setCommand("executemod", new ExecuteModifiedCommand());
@@ -61,6 +63,10 @@ public class Loader extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		
+	}
+	
+	private void createPluginFolder() {
+		getDataFolder().mkdir();
 	}
 	
 	public void setCommand(String command, Object executor) {
