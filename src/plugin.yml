@@ -40,6 +40,12 @@ commands:
    setvar:
       permission: cwevents.setvar
       usage: setvar <var_name> <variable>
+   script:
+      permission: cwevents.script
+      usage: Syntax Error
+   createworld:
+      permission: cwevents.createworld
+      usage: createworld <event_identifier> <world_name> 
 permissions:
    cwevents.*:
       default: op
@@ -55,6 +61,8 @@ permissions:
          cwevents.chgive: true
          cwevents.if: true
          cwevents.setvar: true
+         cwevents.script: true
+         cwevents.createworld: true
    cwevents.executemod:
       default: op
    cwevents.sendmsg:
@@ -76,4 +84,8 @@ permissions:
    cwevents.if:
       default: op
    cwevents.setvar:
+      default: op
+   cwevents.script:
+      default: op
+   cwevents.createworld:
       default: op

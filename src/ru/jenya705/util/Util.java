@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Util {
 
@@ -65,6 +67,21 @@ public class Util {
 		}
 		return Arrays.copyOf(bufArr, currentLen);
 		
+	}
+	
+	public static List<File> getFilesInDirectory(File directory) {
+		List<File> files = new ArrayList<>();
+		File[] directoryFiles = directory.listFiles();
+		for (File file : directoryFiles) {
+			if (file.isDirectory()) {
+				List<File> directoryInDirectoryFiles = getFilesInDirectory(file);
+				for (File inDirectoryFile : directoryInDirectoryFiles) files.add(inDirectoryFile);
+			}
+			else {
+				files.add(file);
+			}
+		}
+		return files;
 	}
 	
 }

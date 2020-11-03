@@ -1,5 +1,6 @@
 package ru.jenya705;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,6 +9,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ru.jenya705.command.CreateWorldCommand;
 import ru.jenya705.command.DispatchChainCommand;
 import ru.jenya705.command.DispatchCommand;
 import ru.jenya705.command.ExecuteModifiedCommand;
@@ -22,6 +24,7 @@ import ru.jenya705.command.SetVarCommand;
 import ru.jenya705.component.TriggerComponent;
 import ru.jenya705.component.TriggerOnceComponent;
 import ru.jenya705.component.TriggerPlayerOnceComponent;
+import ru.jenya705.script.ScriptCommand;
 
 public class Loader extends JavaPlugin {
 
@@ -38,7 +41,7 @@ public class Loader extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
-		createPluginFolder();
+		createPluginFolders();
 		
 		GameEvent.loadEvents();
 		
@@ -53,6 +56,8 @@ public class Loader extends JavaPlugin {
 		setCommand("chgive", new GiveChestCommand());
 		setCommand("if", new IfCommand());
 		setCommand("setvar", new SetVarCommand());
+		setCommand("script", new ScriptCommand());
+		setCommand("createworld", new CreateWorldCommand());
 		
 		(new TriggerComponent()).registerComponent();
 		(new TriggerOnceComponent()).registerComponent();
@@ -65,8 +70,9 @@ public class Loader extends JavaPlugin {
 		
 	}
 	
-	private void createPluginFolder() {
-		getDataFolder().mkdir();
+	private void createPluginFolders() {
+		getDataFolder().						mkdir();
+		new File(getDataFolder(), "\\scripts").	mkdir();
 	}
 	
 	public void setCommand(String command, Object executor) {

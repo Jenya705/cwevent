@@ -1,25 +1,35 @@
 package ru.jenya705.util;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.block.data.Directional;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 
 import ru.jenya705.Loader;
 import ru.jenya705.component.Component;
 import ru.jenya705.component.ComponentMethodData;
 
 public class MinecraftUtil {
+	
+	public static class VoidChunkGenerator extends ChunkGenerator {
+		
+		@Override
+		public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+			return createChunkData(world);
+		}
+		
+	}
 	
 	protected static class MultiplyCommand { 
 		private List<String> values;
@@ -163,8 +173,8 @@ public class MinecraftUtil {
 		for (int i = 0; i < args.length; ++i) {
 			String str = args[i];
 			if (values != null) {
-				if (str.equals("@m")) return new MultiplyCommand(values, Util.connectStringsFromArrayWithCut(args, 0, i - values.size() - 1, " "), 
-						Util.connectStringsFromArrayWithCut(args, i + 1, args.length, " "));
+				if (str.equals("@m")) return new MultiplyCommand(values, Util.connectStringsFromArrayWithCut(args, 0, i - values.size() - 1, " ") + " ", 
+						" " + Util.connectStringsFromArrayWithCut(args, i + 1, args.length, " "));
 				else values.add(str);
 			}
 			else {

@@ -126,6 +126,12 @@ public class DataParser {
 		return new Location(parseWorld(parseData), parseDouble(parseData), parseDouble(parseData), parseDouble(parseData));
 	}
 	
+	public static String[] parseArray(ParseData parseData, int len) {
+		String[] arr = new String[len];
+		for (int i = 0; i < len; ++i) arr[i] = parseData.next();
+		return arr;
+	}
+	
 	public static <T extends Object> T[] parseArray(Class<T> clazz, ParseData parseData, int len) {
 		T[] arr = (T[]) Array.newInstance(clazz, len);
 		Function<ParseData, Object> parseFunction = getParseFunction(clazz);

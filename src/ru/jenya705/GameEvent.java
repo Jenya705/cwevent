@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -79,7 +80,7 @@ public class GameEvent {
 			if (getBroadCastTime().isWriteEventInfo()) {
 				stringBuilder.append(" до события " + getGameEvent().getName());
 			}
-			if (getBroadCastTime().isWriteCoordinates()) {
+			if (getBroadCastTime().isWriteCoordinates() && getGameEvent().getWorld() == null) {
 				stringBuilder.append(". Координаты в чате");
 				BroadcastExecutor.sendCoordinatesToAll(getGameEvent());
 			}
@@ -120,7 +121,7 @@ public class GameEvent {
 		public void run() {
 			MinecraftUtil.sendTitleToAll("Событие " + getGameEvent().getName(), "началось!", 10, 70, 20);
 			MinecraftUtil.playSoundForAll(Sound.ENTITY_ENDER_DRAGON_GROWL);
-			BroadcastExecutor.sendCoordinatesToAll(getGameEvent());
+			if (getGameEvent().getWorld() == null) BroadcastExecutor.sendCoordinatesToAll(getGameEvent());
 			getGameEvent().start();
 		}
 
@@ -157,6 +158,7 @@ public class GameEvent {
 					}
 				}
 			}
+			Bukkit.unloadWorld(gameEvent.getWorld().getName(), true);
 			Loader.log(Level.INFO, "Delete all mentions about gameEvent" + gameEvent.getIdentifier());
 			Loader.log(Level.INFO, "Save deleted gameEvent");
 			SaveRunnable.saveFinished(gameEvent.getIdentifier());
@@ -198,6 +200,7 @@ public class GameEvent {
 					if (jsonObject.containsKey(gameEvent.getIdentifier()) == false) {
 						JSONObject eventObject = new JSONObject();
 						eventObject.put("name", gameEvent.getName());
+						if (gameEvent.getWorld() != null) eventObject.put("world", gameEvent.getWorld().getName());
 						eventObject.put("date", (new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss")).format(gameEvent.getDate()));
 						eventObject.put("finished", false);
 						JSONArray jsonArray = new JSONArray();
@@ -207,6 +210,10 @@ public class GameEvent {
 						jsonArray.add(gameEvent.getStartLocation().getBlockZ());
 						eventObject.put("startlocation", jsonArray);
 						jsonObject.put(gameEvent.getIdentifier(), eventObject);
+					}
+					else {
+						JSONObject gameEventObject = (JSONObject) jsonObject.get(gameEvent.getIdentifier());
+						if (gameEvent.getWorld() != null) gameEventObject.put("world", gameEvent.getWorld().getName());
 					}
 				}
 				Util.writeTextInFile(jsonObject.toJSONString(), file);
@@ -231,6 +238,8 @@ public class GameEvent {
 	private String identifier;
 	private Date date;
 	private Location startLocation;
+	
+	private World world;
 	
 	public GameEvent(String name, String identifier, Date date, Location startLocation) {
 		setName(name);
@@ -276,12 +285,14 @@ public class GameEvent {
 					boolean finished = (boolean) eventObject.get("finished");
 					if (finished == false) {
 						String eventName = (String) eventObject.get("name");
+						String worldName = (String) eventObject.getOrDefault("world", null);
 						Date date = (new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss")).parse((String)eventObject.get("date"));
 						JSONArray locationLikeArray  = (JSONArray) eventObject.get("startlocation");
 						Location startLocation = new Location(Bukkit.getWorld((String)locationLikeArray.get(0)), 
 								(long)locationLikeArray.get(1), (long)locationLikeArray.get(2), (long)locationLikeArray.get(3));
 						GameEvent gameEvent = new GameEvent(eventName, key, date, startLocation);
 						GameEvent.addGameEvent(gameEvent);
+						if (worldName != null) gameEvent.setWorld(Bukkit.getWorld(worldName));
 						Loader.log(Level.INFO, "Loaded event " + key);
 					}
 				}
@@ -365,6 +376,14 @@ public class GameEvent {
 	}
 	public boolean isStarted() {
 		return date.before(new Date());
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 }
